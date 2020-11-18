@@ -1,6 +1,8 @@
 import sys
 import pprint
 import math
+import CluVRP
+import json
 
 class SoftCluVRPSolver:
 
@@ -52,8 +54,69 @@ class SoftCluVRPSolver:
 
     # Print all variables of Class
     def printAllClassVariable(self):
-        print(vars(self))
+        with open("TXT.json", "w") as write_file:
+            json.dump(vars(self), write_file)
+        # print(vars(self))
         # print(pprint.pformat(vars(self), indent=4, width=1))
+
+    # To Remove Depot
+    def removeDepot(self):
+        if self.graph:
+            newGraph = [row[:] for row in self.graph]
+            for i in range(self.NumberOfNodes):
+                newGraph[0][i] = 0.0
+            return newGraph
+        else:
+            return []
+
+    def findCentroidsOfClusters(self):
+        centroid = []
+        for i in self.cluster:
+            x,y = 0,0
+            l = len(self.cluster[i])
+            for node in self.cluster[i]:
+                x = x + self.NodeLocMap[node-1][0]
+                y = y + self.NodeLocMap[node-1][1]
+            centroid.append([x/l,y/l])
+        return centroid
+
+    def ApplyGAonClusters(self):
+        self.centroids = self.findCentroidsOfClusters()
+        self.cGraph = []
+        self.frontier = "---------"
+        
+        distances = dict()
+        clusters = dict()
+        trucks = ['truck' for i in range(self.NumberOfVehicles)]
+
+        geneticProblemInstances = 20
+
+        for i in range(self.NumberOfCluster):
+            self.cGraph.append([0 for i in range(self.NumberOfCluster)])
+        cap = []
+        for i in range(self.NumberOfCluster):
+            for j in range(self.NumberOfCluster):
+                if i != j:
+                    # ci, cj = self.centroids[i], self.centroids[j]
+                    self.cGraph[i][j] = self.calculateDistance(self.centroids[i], self.centroids[j])
+                else:
+                    self.cGraph[i][j] = 1000
+            distances[i] = self.cGraph[i][:]
+            clusters[i] = "cluster "+str(i)
+            cap.append((i,self.demands[i+1]))
+        
+        cap.append(((trucks[0],self.VehicleCapacity)))
+
+        genetic_problem_instances = 20
+        CluVRP.trucks = trucks
+        CluVRP.num_trucks = len(trucks)
+        CluVRP.distances = distances
+        CluVRP.clusters = clusters
+        CluVRP.capacity_trucks = self.VehicleCapacity
+        CluVRP.frontier = self.frontier
+
+        CluVRP.VRP(genetic_problem_instances, cap)
+
 
 # Main function
 if __name__ == "__main__":
@@ -65,5 +128,7 @@ if __name__ == "__main__":
 
     solver = SoftCluVRPSolver()
     solver.readInput(dir+fileName)
-    
-    # solver.printAllClassVariable()
+    # solver.findCentroidsOfClusters()
+    solver.ApplyGAonClusters()
+
+    solver.printAllClassVariable()

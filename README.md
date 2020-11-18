@@ -1,16 +1,19 @@
 # SoftVRP
+
 A repository for solving Soft VRP problem.
 
 ## Approach
+
 1. Take Input -  https://logistik.bwl.uni-mainz.de/files/2020/01/SoftCluVRPinstances.zip
 2. Remove depot from cluster to get disconnected components.
 3. Do preprocessing on each cluster - https://sci-hub.se/https://doi.org/10.1287/trsc.1100.0352
-2. Make a capacity cut on each cluster.
-3. Distribute the vehicles to each cluster.
-4. Apply GA on each cluster.
-5. Minimize the number of vehicles for the cluster by assigning the same vehicle to two or more cluster.
+4. Make a capacity cut on each cluster.
+5. Distribute the vehicles to each cluster.
+6. Apply GA on each cluster.
+7. Minimize the number of vehicles for the cluster by assigning the same vehicle to two or more cluster.
 
 ## Input Format
+
 ```bash
 Authors: Heßler, Irnich, 2020
 
