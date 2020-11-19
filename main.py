@@ -97,7 +97,6 @@ class SoftCluVRPSolver:
         for i in range(self.NumberOfCluster):
             for j in range(self.NumberOfCluster):
                 if i != j:
-                    # ci, cj = self.centroids[i], self.centroids[j]
                     self.cGraph[i][j] = self.calculateDistance(self.centroids[i], self.centroids[j])
                 else:
                     self.cGraph[i][j] = 1000
@@ -115,20 +114,33 @@ class SoftCluVRPSolver:
         CluVRP.capacity_trucks = self.VehicleCapacity
         CluVRP.frontier = self.frontier
 
-        CluVRP.VRP(genetic_problem_instances, cap)
+        solution, fitness = CluVRP.VRP(genetic_problem_instances, cap)
+        count = 1
+        print('Vehicle 1: ', end='  --  ')
+        for vehicle in solution:
+            if vehicle != self.frontier:
+                print(vehicle,end=', ')
+            else:
+                count = count + 1
+                print()
+                print('Vehicle '+str(count)+': ', end='  --  ')
+        return solution, fitness
 
 
 # Main function
 if __name__ == "__main__":
+    
     dir = 'SoftCluVRPinstances/Grid/'
     fileName = 'grid01-n121-C6-V2.gvrp'
 
     # TODO:
         # Read file name from cmd arguments
-
+    print('Initializing Solver')
     solver = SoftCluVRPSolver()
+    print('Reading Input')
     solver.readInput(dir+fileName)
     # solver.findCentroidsOfClusters()
+    print('Applying Genetic Algorithm on Cluster')
     solver.ApplyGAonClusters()
 
     solver.printAllClassVariable()

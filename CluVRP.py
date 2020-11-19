@@ -1,3 +1,4 @@
+import math
 import random
 from random import randrange
 from time import time 
@@ -166,9 +167,9 @@ def genetic_algorithm_t(Problem_Genetic,k,opt,ngen,size,ratio_cross,prob_mutate)
         population = new_generation_t(Problem_Genetic, k, opt, population, n_parents, n_directs, prob_mutate)
     
     bestChromosome = opt(population, key = Problem_Genetic.fitness)
-    print("Chromosome: ", bestChromosome)
+    # print("Chromosome: ", bestChromosome)
     genotype = Problem_Genetic.decode(bestChromosome)
-    print ("Solution: " , (genotype,Problem_Genetic.fitness(bestChromosome)))
+    # print ("Solution: " , (genotype,Problem_Genetic.fitness(bestChromosome)))
     return (genotype,Problem_Genetic.fitness(bestChromosome))
 
 def VRP(k, op):
@@ -178,19 +179,29 @@ def VRP(k, op):
     
     def first_part_GA(k):
         cont  = 0
-        print ("---------------------------------------------------------Executing FIRST PART: VRP --------------------------------------------------------- \n")
-        print("Capacity of trucks = ",capacity_trucks)
-        print("Frontier = ",frontier)
-        print("")
+        print ("Please Wait ...")
         tiempo_inicial_t2 = time()
-        while cont <= k: 
-            genetic_algorithm_t(VRP_PROBLEM, 2, min, 200, 100, 0.8, 0.05)
-            cont+=1
-        tiempo_final_t2 = time()
-        print("\n") 
-        print("Total time: ",(tiempo_final_t2 - tiempo_inicial_t2)," secs.\n")
+        minfitness = None
+        bestSolution = None
 
-    first_part_GA(k)
+        while cont <= k: 
+            genotype, fitness = genetic_algorithm_t(VRP_PROBLEM, 2, min, 200, 100, 0.8, 0.05)
+            if minfitness:
+                if minfitness > fitness:
+                    minfitness = fitness
+                    bestSolution = genotype
+            else:
+                minfitness = fitness
+                bestSolution = genotype
+
+            cont+=1
+        
+        tiempo_final_t2 = time()
+        # print("Total time: ",(tiempo_final_t2 - tiempo_inicial_t2)," secs.\n")
+        return (bestSolution, minfitness)
+
+    solution = first_part_GA(k)
+    return solution
 
 #CONSTANTS
 

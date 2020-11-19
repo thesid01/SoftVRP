@@ -1,2 +1,3 @@
 TXT.json
 __pycache__/
+*.pyc
