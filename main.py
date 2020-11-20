@@ -116,15 +116,44 @@ class SoftCluVRPSolver:
 
         solution, fitness = CluVRP.VRP(genetic_problem_instances, cap)
         count = 1
-        print('Vehicle 1: ', end='  --  ')
+        self.solutionClusters = [[]]
+        print(' ')
+        print('Vehicle 1: ')
         for vehicle in solution:
             if vehicle != self.frontier:
-                print(vehicle,end=', ')
+                print(vehicle)
+                self.solutionClusters[-1].append(vehicle.split(' ')[1])
             else:
+                print(' ')
                 count = count + 1
-                print()
-                print('Vehicle '+str(count)+': ', end='  --  ')
+                print('Vehicle '+str(count)+': ')
+                self.solutionClusters.append([])
         return solution, fitness
+    
+    def ApplyTSPonClusters(self):
+        ans = 0
+        self.solutionClustersCustomers = []
+        for clusters in self.solutionClusters:
+            customers = []
+            for cluster in clusters:
+                for c in self.cluster[int(cluster)+1]:
+                    customers.append(c)
+            self.solutionClustersCustomers.append(customers)
+            l = len(customers)
+            tempGraph = []
+            for i in range(l):
+                tempGraph.append([0 for i in range(l)])
+            
+            for i in range(l):
+                for j in range(l):
+                    if i != j:
+                        tempGraph[i][j] = self.calculateDistance(self.NodeLocMap[customers[i]-1], self.NodeLocMap[customers[j]-1])
+                    else:
+                        tempGraph[i][j] = 1000
+            #  TODO:
+                # Apply TSP
+
+        return ans
 
 
 # Main function
@@ -142,5 +171,6 @@ if __name__ == "__main__":
     # solver.findCentroidsOfClusters()
     print('Applying Genetic Algorithm on Cluster')
     solver.ApplyGAonClusters()
+    solver.ApplyTSPonClusters()
 
     solver.printAllClassVariable()
