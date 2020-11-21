@@ -11,6 +11,8 @@ A repository for solving Soft VRP problem.
 5. Distribute the vehicles to each cluster.
 6. Apply GA on each cluster.
 7. Minimize the number of vehicles for the cluster by assigning the same vehicle to two or more cluster.
+8. Apply GA for all customers visited by each vehicle.
+9. Minimize the path required for travel.
 
 ## Input Format
 
