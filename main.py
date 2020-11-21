@@ -2,6 +2,7 @@ import sys
 import pprint
 import math
 import CluVRP
+import TSP2 as TSP
 import json
 
 class SoftCluVRPSolver:
@@ -133,6 +134,8 @@ class SoftCluVRPSolver:
     def ApplyTSPonClusters(self):
         ans = 0
         self.solutionClustersCustomers = []
+        cities = dict()
+        distances = dict()
         for clusters in self.solutionClusters:
             customers = []
             for cluster in clusters:
@@ -150,8 +153,16 @@ class SoftCluVRPSolver:
                         tempGraph[i][j] = self.calculateDistance(self.NodeLocMap[customers[i]-1], self.NodeLocMap[customers[j]-1])
                     else:
                         tempGraph[i][j] = 1000
-            #  TODO:
-                # Apply TSP
+                distances[i] = tempGraph[i][:]
+                cities[i] = str(customers[i]-1)
+
+            genetic_problem_instances = 10
+            TSP.distances = distances
+            TSP.cities = cities
+            TSP.total_cities = l
+
+            result = TSP.TSP(genetic_problem_instances, l)
+            print(result)
 
         return ans
 
@@ -160,7 +171,7 @@ class SoftCluVRPSolver:
 if __name__ == "__main__":
     
     dir = 'SoftCluVRPinstances/Grid/'
-    fileName = 'grid01-n121-C6-V2.gvrp'
+    fileName = 'grid02-n121-C6-V2.gvrp'
 
     # TODO:
         # Read file name from cmd arguments
@@ -171,6 +182,7 @@ if __name__ == "__main__":
     # solver.findCentroidsOfClusters()
     print('Applying Genetic Algorithm on Cluster')
     solver.ApplyGAonClusters()
+    print('Applying Genetic Algorithm on Customers')
     solver.ApplyTSPonClusters()
 
     solver.printAllClassVariable()
