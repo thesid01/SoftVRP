@@ -132,7 +132,7 @@ class SoftCluVRPSolver:
         return solution, fitness
     
     def ApplyTSPonClusters(self):
-        ans = 0
+        self.results = []
         self.solutionClustersCustomers = []
         cities = dict()
         distances = dict()
@@ -162,10 +162,9 @@ class SoftCluVRPSolver:
             TSP.total_cities = l
 
             result = TSP.TSP(genetic_problem_instances, l)
-            print(result)
+            self.results.append(result)
 
-        return ans
-
+        return 
 
 # Main function
 if __name__ == "__main__":

@@ -179,7 +179,7 @@ def VRP(k, op):
     
     def first_part_GA(k):
         cont  = 0
-        print ("Please Wait ...")
+        print ("Please Wait ... (it may take upto few seconds)")
         tiempo_inicial_t2 = time()
         minfitness = None
         bestSolution = None

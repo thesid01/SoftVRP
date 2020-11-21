@@ -168,7 +168,7 @@ def TSP(k,n):
     
     def first_part_GA(k):
         cont  = 0
-        print('Please Wait...')
+        print('Please Wait... (it may take upto 1 minute)')
         tiempo_inicial_t2 = time()
         minfitness = None
         bestSolution = None
@@ -187,14 +187,12 @@ def TSP(k,n):
         tiempo_final_t2 = time() 
         print("")
         print("Total time: ",(tiempo_final_t2 - tiempo_inicial_t2)," secs.\n")
+        print(bestSolution, minfitness)
         return (bestSolution, minfitness)
      
     
     solution = first_part_GA(k)
     return solution
-    print("------------------------------------------------------------------------------------------------------------------------------------------------------------------")
-#---------------------------------------- AUXILIARY DATA FOR TESTING --------------------------------
-
 
 # cities = {0:'Almeria',1:'Cadiz',2:'Cordoba',3:'Granada',4:'Huelva',5:'Jaen',6:'Malaga',7:'Sevilla'}
 
@@ -211,7 +209,6 @@ def TSP(k,n):
 
 # distances = {0:w0,1:w1,2:w2,3:w3,4:w4,5:w5,6:w6,7:w7}
 # total_cities
-
 
 if __name__ == "__main__":
 
