@@ -11,6 +11,7 @@ class Problem_Genetic(object):
         self.decode= decode
         self.fitness= fitness
 
+    #  function that implements the crossover operator over two chromosomes
     def mutation(self, chromosome, prob):
             
             def inversion_mutation(chromosome_aux):
@@ -32,6 +33,7 @@ class Problem_Genetic(object):
                     aux = inversion_mutation(chromosome)
             return aux
 
+    # function that implements the crossover operator over two chromosomes
     def crossover(self,parent1, parent2):
 
         def process_gen_repeated(copy_child1,copy_child2):
@@ -67,7 +69,7 @@ class Problem_Genetic(object):
         
         return  process_gen_repeated(child1, child2)
     
-   
+# method that receives the genotype (chromosome) as input and returns the phenotype (solution to the original problem represented by the chromosome) 
 def decodeVRP(chromosome):    
     list=[]
     for (k,v) in chromosome:
@@ -76,7 +78,6 @@ def decodeVRP(chromosome):
             continue
         list.append(clusters.get(k))
     return list
-
 
 def penalty_capacity(chromosome):
         actual = chromosome
@@ -100,6 +101,7 @@ def penalty_capacity(chromosome):
                 value_penalty+= 100 * overloads
         return value_penalty
 
+# method that returns the evaluation of a chromosome (acts over the genotype)
 def fitnessVRP(chromosome):
     
     def distanceTrip(index,city):
@@ -167,13 +169,10 @@ def genetic_algorithm_t(Problem_Genetic,k,opt,ngen,size,ratio_cross,prob_mutate)
         population = new_generation_t(Problem_Genetic, k, opt, population, n_parents, n_directs, prob_mutate)
     
     bestChromosome = opt(population, key = Problem_Genetic.fitness)
-    # print("Chromosome: ", bestChromosome)
     genotype = Problem_Genetic.decode(bestChromosome)
-    # print ("Solution: " , (genotype,Problem_Genetic.fitness(bestChromosome)))
     return (genotype,Problem_Genetic.fitness(bestChromosome))
 
 def VRP(k, op):
-    # VRP_PROBLEM = Problem_Genetic([(0,34),(1,21),(2,24),(3,35),(4,39),(5,27), (trucks[0],capacity_trucks)], len(clusters), lambda x : decodeVRP(x), lambda y: fitnessVRP(y))
     
     VRP_PROBLEM = Problem_Genetic(op, len(clusters), lambda x : decodeVRP(x), lambda y: fitnessVRP(y))
     
@@ -197,35 +196,7 @@ def VRP(k, op):
             cont+=1
         
         tiempo_final_t2 = time()
-        # print("Total time: ",(tiempo_final_t2 - tiempo_inicial_t2)," secs.\n")
         return (bestSolution, minfitness)
 
     solution = first_part_GA(k)
     return solution
-
-#CONSTANTS
-
-# clusters = {0:'Almeria',1:'Cadiz',2:'Cordoba',3:'Granada',4:'Huelva',5:'Jaen'}
-
-#Distance between each pair of clusters
-
-# w0 = [999,454,317,165,528,222]
-# w1 = [453,999,253,291,210,325]
-# w2 = [317,252,999,202,226,108]
-# w3 = [165,292,201,999,344,94]
-# w4 = [508,210,235,346,999,336]
-# w5 = [222,325,116,93,340,999]
-
-# distances = {0:w0,1:w1,2:w2,3:w3,4:w4,5:w5}
-
-# capacity_trucks = 100
-# trucks = ['truck1','truck2']
-# num_trucks = len(trucks)
-# frontier = "---------"
-
-if __name__ == "__main__":
-
-    # Constant that is an instance object 
-    genetic_problem_instances = 20
-    print("EXECUTING ", genetic_problem_instances, " INSTANCES ")
-    VRP(genetic_problem_instances)

@@ -5,6 +5,7 @@ import CluVRP
 import TSP2 as TSP
 import json
 
+# class to instantiate the solver
 class SoftCluVRPSolver:
 
     # Constructor
@@ -57,19 +58,8 @@ class SoftCluVRPSolver:
     def printAllClassVariable(self):
         with open("TXT.json", "w") as write_file:
             json.dump(vars(self), write_file)
-        # print(vars(self))
-        # print(pprint.pformat(vars(self), indent=4, width=1))
 
-    # To Remove Depot
-    def removeDepot(self):
-        if self.graph:
-            newGraph = [row[:] for row in self.graph]
-            for i in range(self.NumberOfNodes):
-                newGraph[0][i] = 0.0
-            return newGraph
-        else:
-            return []
-
+    # To find the centroid of all clusters to apply GA approximately for assiging vehicle
     def findCentroidsOfClusters(self):
         centroid = []
         for i in self.cluster:
@@ -81,6 +71,7 @@ class SoftCluVRPSolver:
             centroid.append([x/l,y/l])
         return centroid
 
+    # To apply GA on clusters for vehicle assigining
     def ApplyGAonClusters(self):
         self.centroids = self.findCentroidsOfClusters()
         self.cGraph = []
@@ -131,13 +122,15 @@ class SoftCluVRPSolver:
                 self.solutionClusters.append([])
         return solution, fitness
     
+
+    # To apply TSP on each group of clusters for finding minimum distance for travel
     def ApplyTSPonClusters(self):
         self.results = []
         self.solutionClustersCustomers = []
         cities = dict()
         distances = dict()
         for clusters in self.solutionClusters:
-            customers = []
+            customers = [1]
             for cluster in clusters:
                 for c in self.cluster[int(cluster)+1]:
                     customers.append(c)
@@ -170,10 +163,9 @@ class SoftCluVRPSolver:
 if __name__ == "__main__":
     
     dir = 'SoftCluVRPinstances/Grid/'
+    # file name
     fileName = 'grid02-n121-C6-V2.gvrp'
 
-    # TODO:
-        # Read file name from cmd arguments
     print('Initializing Solver')
     solver = SoftCluVRPSolver()
     print('Reading Input')
@@ -184,4 +176,4 @@ if __name__ == "__main__":
     print('Applying Genetic Algorithm on Customers')
     solver.ApplyTSPonClusters()
 
-    solver.printAllClassVariable()
+    # solver.printAllClassVariable()

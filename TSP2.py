@@ -3,14 +3,15 @@ from random import randrange
 from time import time 
 
 
-class Problem_Genetic(object): 
+class Problem_Genetic(object):
+    #  constructor
     def __init__(self,genes,individuals_length,decode,fitness):
         self.genes= genes
         self.individuals_length= individuals_length
         self.decode= decode
         self.fitness= fitness
 
-
+    # function that implements a mutation over a chromosome
     def mutation(self, chromosome, prob):
             
             def inversion_mutation(chromosome_aux):
@@ -29,6 +30,7 @@ class Problem_Genetic(object):
                     aux = inversion_mutation(chromosome)
             return aux
 
+    # function that implements the crossover operator over two chromosomes
     def crossover(self,parent1, parent2):
 
         def process_gen_repeated(copy_child1,copy_child2):
@@ -64,13 +66,12 @@ class Problem_Genetic(object):
         
         return  process_gen_repeated(child1, child2)
         
-
+# method that receives the genotype (chromosome) as input and returns the phenotype (solution to the original problem represented by the chromosome) 
 def decodeTSP(chromosome):    
     lista=[]
     for i in chromosome:
         lista.append(cities.get(i))
     return lista
-
 
 def penalty(chromosome):
         actual = chromosome
@@ -82,7 +83,7 @@ def penalty(chromosome):
                 value_penalty+= 100 * abs(times - len(actual))
         return value_penalty
 
-
+# method that returns the evaluation of a chromosome (acts over the genotype)
 def fitnessTSP(chromosome):
     
     def distanceTrip(index,city):
@@ -110,6 +111,7 @@ def fitnessTSP(chromosome):
 
 def genetic_algorithm_t(Problem_Genetic,k,opt,ngen,size,ratio_cross,prob_mutate):
     
+    # To generate initial population
     def initial_population(Problem_Genetic,size):   
         def generate_chromosome():
             chromosome=[]
@@ -118,7 +120,8 @@ def genetic_algorithm_t(Problem_Genetic,k,opt,ngen,size,ratio_cross,prob_mutate)
             random.shuffle(chromosome)
             return chromosome
         return [generate_chromosome() for _ in range(size)]
-            
+
+    # To generate new population for chromose 
     def new_generation_t(Problem_Genetic,k,opt,population,n_parents,n_directs,prob_mutate):
         
         def tournament_selection(Problem_Genetic,population,n,k,opt):
@@ -162,6 +165,7 @@ def genetic_algorithm_t(Problem_Genetic,k,opt,ngen,size,ratio_cross,prob_mutate)
     # print ("Solution:" , (genotype,Problem_Genetic.fitness(bestChromosome)))
     return (genotype,Problem_Genetic.fitness(bestChromosome))
 
+# To apply TSP on each group of cluster
 def TSP(k,n):
     dummy = [i for i in range(n)]
     TSP_PROBLEM = Problem_Genetic(dummy,n, lambda x : decodeTSP(x), lambda y: fitnessTSP(y))
@@ -186,33 +190,14 @@ def TSP(k,n):
             cont+=1
         tiempo_final_t2 = time() 
         print("")
-        print("Total time: ",(tiempo_final_t2 - tiempo_inicial_t2)," secs.\n")
-        print(bestSolution, minfitness)
+        print('Sequence of customer to visit starting from depot i.e. at 0,0 is:')
+        depot = bestSolution.index('0')
+        solution = [*bestSolution[depot:], *bestSolution[:depot]]
+        print(solution)
+        print('Distance traveled')
+        print(minfitness)
         return (bestSolution, minfitness)
      
     
     solution = first_part_GA(k)
     return solution
-
-# cities = {0:'Almeria',1:'Cadiz',2:'Cordoba',3:'Granada',4:'Huelva',5:'Jaen',6:'Malaga',7:'Sevilla'}
-
-#Distance between each pair of cities
-
-# w0=[999,454,317,165,528,222,223,410]
-# w1=[453,999,253,291,210,325,234,121]
-# w2=[317,252,999,202,226,108,158,140]
-# w3=[165,292,201,999,344,94,124,248]
-# w4=[508,210,235,346,999,336,303,94]
-# w5=[222,325,116,93,340,999,182,247]
-# w6=[223,235,158,125,302,185,999,206]
-# w7=[410,121,141,248,93,242,199,999]
-
-# distances = {0:w0,1:w1,2:w2,3:w3,4:w4,5:w5,6:w6,7:w7}
-# total_cities
-
-if __name__ == "__main__":
-
-    # Constant that is an instance object 
-    genetic_problem_instances = 10
-    print("EXECUTING ", genetic_problem_instances, " INSTANCES \n")
-    TSP(genetic_problem_instances)
